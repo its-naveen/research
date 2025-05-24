@@ -28,44 +28,72 @@ const reducer = (state, action) => {
   }
 }
 
-export default function Signup() {
+export default function Signup({ handleNavigation }) {
   const navigation = useNavigate();
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const { email, phone, emailError, phoneError } = state;
+
+  const handleValidation = () => {
+    let hasError = false;
+    if (!email) {
+      dispatch({ type: 'SET_EMAIL_ERROR', payload: 'Email is required' });
+      hasError = true;
+    } else {
+      dispatch({ type: 'SET_EMAIL_ERROR', payload: '' });
+      hasError = false;
+    }
+
+    if (!phone) {
+      dispatch({ type: 'SET_PHONE_ERROR', payload: 'Phone is required' });
+      hasError = true;
+    } else {
+      dispatch({ type: 'SET_PHONE_ERROR', payload: '' });
+      hasError = false;
+    }
+
+    return hasError;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.targer;
     dispatch({ type: `SET_${name.toUpperCase()}`, payload: value });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!handleValidation()) {
+      handleNavigation('/login');
+    }
+  }
+
   return (
     <SignupContainer>
       <SignupForm>
         <SignupTitle>Create an account</SignupTitle>
         <FloatingInput
-          label={'Email'}
+          label={'Email ID'}
           name={'email'}
           type={'text'}
-          placeholder={'Enter email'}
+          // placeholder={'Enter Your Email ID'}
           value={email}
           error={emailError}
           onChange={handleChange}
           maxLength={30}
         />
         <FloatingInput
-          label={'Phone'}
+          label={'Phone Number'}
           name={'phone'}
           type={'number'}
-          placeholder={'Enter phone'}
+          // placeholder={'Enter Your Phone Number'}
           value={phone}
           error={phoneError}
           onChange={handleChange}
           maxLength={30}
         />
-        <Button>Confirm</Button>
+        <Button onClick={handleSubmit}>Continue</Button>
         <LoginContainer>
           <LoginLink>Already have an account?
-            <LoginText onClick={() => navigation('/login')}>
+            <LoginText onClick={() => handleNavigation('/login')}>
               Login
             </LoginText>
           </LoginLink>

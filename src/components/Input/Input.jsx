@@ -31,6 +31,7 @@ export const FloatingInput = ({ label, placeholder, error, ...props }) => {
           $error={!!error ? 'Y' : 'N'}
           $focused={isFocused}
           placeholder={isFocused === 'Y' ? placeholder : ''}
+          onFocus={() => dispatch({ type: 'SET_FOCUS', payload: 'Y' })}
           onBlur={(e) => {
             if (!e.target.value) dispatch({ type: 'SET_FOCUS', payload: 'N' })
           }

@@ -1,6 +1,9 @@
 import { use, useReducer } from "react";
 import { FloatingInput } from "../../components/Input/Input";
-import { LoginContainer, LoginForm, LoginTitle, RedirectionLink, RedirectionLinks, SignupContainer, SignupLink, SignupText } from "../../styles/pages/login/login";
+import {
+  LoginContainer, LoginForm, LoginTitle, RedirectionLink,
+  RedirectionLinks, SignupContainer, SignupLink, SignupText
+} from "../../styles/pages/login/login";
 import Button from "../../components/Button/Button";
 import { useNavigate } from "react-router";
 import { useAppContext } from "../../context/appContext";
@@ -29,10 +32,9 @@ const reducer = (state, action) => {
   }
 }
 
-export default function Login() {
+export default function Login({ handleNavigation }) {
   const navigate = useNavigate();
   const { login } = useAppContext();
-
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const { username, password, usernameError, passwordError } = state;
 
@@ -64,11 +66,10 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!handleValidation()) {
-      console.log('Login successful');
+      dispatch({ type: 'RESET' });
       login({ username, password });
-      navigate('home');
+      handleNavigation('/home');
     }
   };
 
@@ -80,7 +81,7 @@ export default function Login() {
           label={'Username'}
           name={'username'}
           type={'text'}
-          placeholder={'Enter username'}
+          // placeholder={'Enter The Username'}
           value={username}
           error={usernameError}
           onChange={handleChange}
@@ -90,7 +91,7 @@ export default function Login() {
           label={'Password'}
           name={'password'}
           type={'password'}
-          placeholder={'Enter password'}
+          // placeholder={'Enter The Password'}
           value={password}
           error={passwordError}
           onChange={handleChange}
@@ -105,7 +106,7 @@ export default function Login() {
         </Button>
         <SignupContainer>
           <SignupText>Don't have an account?
-            <SignupLink onClick={() => navigate('/signup')}>
+            <SignupLink onClick={() => handleNavigation('/signup')}>
               Sign up
             </SignupLink>
           </SignupText>

@@ -1,13 +1,32 @@
-import { Navigate, Route, Routes, useNavigate } from "react-router";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
 import Home from "./pages/Home/Home";
 import { useAppContext } from "./context/appContext";
-import { useEffect } from "react";
+import { useEffect, useReducer } from "react";
+import { AnimatePresence, motion } from 'framer-motion';
+
+const INITIAL_STATE = {
+  direction: 1,
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_DIRECTION':
+      return { ...state, direction: action.payload };
+    case 'RESET':
+      return INITIAL_STATE;
+    default:
+      return state;
+  }
+}
 
 export default function App() {
-  const { isAuthenticated } = useAppContext();
   const navigation = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated } = useAppContext();
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const { direction } = state;
 
   useEffect(() => {
     console.log("Is Authenticated: ", isAuthenticated());
@@ -16,19 +35,70 @@ export default function App() {
     }
   }, [navigation, isAuthenticated]);
 
+  const handleNavigation = (to) => {
+    const paths = ['/login', '/signup'];
+    const currentPath = paths.indexOf(location.pathname);
+    const nextPath = paths.indexOf(to);
+
+    if (currentPath < nextPath) {
+      dispatch({ type: 'SET_DIRECTION', payload: 1 });
+    } else if (currentPath > nextPath) {
+      dispatch({ type: 'SET_DIRECTION', payload: -1 });
+    }
+    navigation(to);
+  };
+
+  const pageVariants = {
+    enter: (direction) => ({
+      x: direction > 0 ? '10%' : '-10%',
+      opacity: 0
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.25 }
+    },
+    exit: (direction) => ({
+      x: direction > 0 ? '-10%' : '10%',
+      opacity: 0,
+      transition: { duration: 0.25 }
+    })
+  };
+
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path='/signup' element={<Signup />} />
-      {
-        isAuthenticated() && (
-          <>
-            <Route path="/home" element={<Home />} />
-            <Route path='/contact' element={<h1>Contact</h1>} />
-          </>
-        )
-      }
-      <Route path="*" element={<Navigate to={isAuthenticated() ? "/home" : "/login"} replace />} />
-    </Routes>
+    <AnimatePresence custom={direction} mode='wait'>
+      <Routes location={location} key={location.pathname}>
+        <Route path="/login" element={
+          <motion.div
+            custom={direction}
+            variants={pageVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+          >
+            <Login handleNavigation={handleNavigation} />
+          </motion.div>} />
+        <Route path='/signup' element={
+          <motion.div
+            custom={direction}
+            variants={pageVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+          >
+            <Signup handleNavigation={handleNavigation} />
+          </motion.div>
+        } />
+        {
+          isAuthenticated() && (
+            <>
+              <Route path="/home" element={<Home />} />
+              <Route path='/contact' element={<h1>Contact</h1>} />
+            </>
+          )
+        }
+        <Route path="*" element={<Navigate to={isAuthenticated() ? "/home" : "/login"} replace />} />
+      </Routes>
+    </AnimatePresence>
   );
 }
