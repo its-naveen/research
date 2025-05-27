@@ -5,6 +5,8 @@ import Home from "./pages/Home/Home";
 import { useAppContext } from "./context/appContext";
 import { useEffect, useReducer } from "react";
 import { AnimatePresence, motion } from 'framer-motion';
+import PageAnimation from "./pages/PageAnimation/PageAnimation";
+import CreateUser from "./pages/Signup/CreateUser";
 
 const INITIAL_STATE = {
   direction: 1,
@@ -36,7 +38,7 @@ export default function App() {
   }, [navigation, isAuthenticated]);
 
   const handleNavigation = (to) => {
-    const paths = ['/login', '/signup'];
+    const paths = ['/login', '/signup', '/createuser'];
     const currentPath = paths.indexOf(location.pathname);
     const nextPath = paths.indexOf(to);
 
@@ -69,25 +71,19 @@ export default function App() {
     <AnimatePresence custom={direction} mode='wait'>
       <Routes location={location} key={location.pathname}>
         <Route path="/login" element={
-          <motion.div
-            custom={direction}
-            variants={pageVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-          >
+          <PageAnimation direction={direction} pageVariants={pageVariants}>
             <Login handleNavigation={handleNavigation} />
-          </motion.div>} />
+          </PageAnimation>
+        } />
         <Route path='/signup' element={
-          <motion.div
-            custom={direction}
-            variants={pageVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-          >
+          <PageAnimation direction={direction} pageVariants={pageVariants}>
             <Signup handleNavigation={handleNavigation} />
-          </motion.div>
+          </PageAnimation>
+        } />
+        <Route path='/createuser' element={
+          <PageAnimation direction={direction} pageVariants={pageVariants}>
+            <CreateUser handleNavigation={handleNavigation} />
+          </PageAnimation>
         } />
         {
           isAuthenticated() && (

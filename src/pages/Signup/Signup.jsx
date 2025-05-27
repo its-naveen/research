@@ -34,10 +34,16 @@ export default function Signup({ handleNavigation }) {
   const { email, phone, emailError, phoneError } = state;
 
   const handleValidation = () => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneRegex = /^\d{12}$/;
+
     let hasError = false;
     if (!email) {
       dispatch({ type: 'SET_EMAIL_ERROR', payload: 'Email is required' });
       hasError = true;
+    } else if (email && emailRegex.test(email) === false) {
+      dispatch({ type: 'SET_EMAIL_ERROR', payload: 'Invalid email address' });
+      hasError = false;
     } else {
       dispatch({ type: 'SET_EMAIL_ERROR', payload: '' });
       hasError = false;
@@ -45,6 +51,9 @@ export default function Signup({ handleNavigation }) {
 
     if (!phone) {
       dispatch({ type: 'SET_PHONE_ERROR', payload: 'Phone is required' });
+      hasError = true;
+    } else if (phone && phoneRegex.test(phone) === false) {
+      dispatch({ type: 'SET_PHONE_ERROR', payload: 'Invalid phone number' });
       hasError = true;
     } else {
       dispatch({ type: 'SET_PHONE_ERROR', payload: '' });
@@ -55,14 +64,14 @@ export default function Signup({ handleNavigation }) {
   }
 
   const handleChange = (e) => {
-    const { name, value } = e.targer;
+    const { name, value } = e.target;
     dispatch({ type: `SET_${name.toUpperCase()}`, payload: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!handleValidation()) {
-      handleNavigation('/login');
+      handleNavigation('/createuser');
     }
   }
 
@@ -78,7 +87,8 @@ export default function Signup({ handleNavigation }) {
           value={email}
           error={emailError}
           onChange={handleChange}
-          maxLength={30}
+          maxLength={25}
+          required={true}
         />
         <FloatingInput
           label={'Phone Number'}
@@ -88,7 +98,8 @@ export default function Signup({ handleNavigation }) {
           value={phone}
           error={phoneError}
           onChange={handleChange}
-          maxLength={30}
+          maxLength={12}
+          required={true}
         />
         <Button onClick={handleSubmit}>Continue</Button>
         <LoginContainer>

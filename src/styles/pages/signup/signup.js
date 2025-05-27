@@ -14,10 +14,10 @@ export const SignupForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-item: center;
+  align-item: center;  
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
-  border: solid 1px #ccc;
-  width: 380px;
+  width: 350px;
   background-color: #fff;
   padding: 24px;
   gap: 10px;

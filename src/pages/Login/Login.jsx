@@ -7,6 +7,7 @@ import {
 import Button from "../../components/Button/Button";
 import { useNavigate } from "react-router";
 import { useAppContext } from "../../context/appContext";
+import { useToastContext } from "../../context/toastContext";
 
 const INITIAL_STATE = {
   username: '',
@@ -36,6 +37,7 @@ export default function Login({ handleNavigation }) {
   const navigate = useNavigate();
   const { login } = useAppContext();
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const { showToast } = useToastContext();
   const { username, password, usernameError, passwordError } = state;
 
   const handleValidation = () => {
@@ -69,6 +71,7 @@ export default function Login({ handleNavigation }) {
     if (!handleValidation()) {
       dispatch({ type: 'RESET' });
       login({ username, password });
+      showToast('Login successful!', 'success');
       handleNavigation('/home');
     }
   };
@@ -86,6 +89,7 @@ export default function Login({ handleNavigation }) {
           error={usernameError}
           onChange={handleChange}
           maxLength={20}
+          required={true}
         />
         <FloatingInput
           label={'Password'}
@@ -96,6 +100,7 @@ export default function Login({ handleNavigation }) {
           error={passwordError}
           onChange={handleChange}
           maxLength={20}
+          required={true}
         />
         <RedirectionLinks>
           <RedirectionLink>Forgot Username?</RedirectionLink>

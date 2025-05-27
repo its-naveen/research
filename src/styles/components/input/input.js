@@ -51,11 +51,21 @@ export const InputField = styled.input`
 export const InputError = styled.span`
   color: red;
   font-size: 10px;
-  font-style: italic;
+  // font-style: italic;
+  font-weight: 500;
   position: absolute;
   bottom: -0.9rem;
   
   &.show {
     animation: ${slideDown} 0.3s ease-out forwards;
   }
+`;
+
+export const IsRequired = styled.span`
+  color: red;
+  font-size: 12px;
+  padding-bottom: 0.8rem;
+  display: inline-block;
+  position: absolute;
+  top: -0.1rem;
 `;
