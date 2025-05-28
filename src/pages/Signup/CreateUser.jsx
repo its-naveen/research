@@ -62,8 +62,8 @@ export default function CreateUser({ handleNavigation}) {
 
     if (!hasError) {
       console.log('User created:', { username, password });
-      showToast('User created successfully!', 'success');
-      handleNavigation('/login');
+      showToast('Account creation initiated!', 'success');
+      handleNavigation('/confirmation');
       dispatch({ type: 'RESET' });
     }
   }

@@ -35,7 +35,7 @@ export default function Signup({ handleNavigation }) {
 
   const handleValidation = () => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const phoneRegex = /^\d{12}$/;
+    const phoneRegex = /^\d{10}$/;
 
     let hasError = false;
     if (!email) {

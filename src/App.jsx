@@ -7,6 +7,7 @@ import { useEffect, useReducer } from "react";
 import { AnimatePresence, motion } from 'framer-motion';
 import PageAnimation from "./pages/PageAnimation/PageAnimation";
 import CreateUser from "./pages/Signup/CreateUser";
+import Confirmation from "./pages/Signup/Confirmation";
 
 const INITIAL_STATE = {
   direction: 1,
@@ -38,7 +39,7 @@ export default function App() {
   }, [navigation, isAuthenticated]);
 
   const handleNavigation = (to) => {
-    const paths = ['/login', '/signup', '/createuser'];
+    const paths = ['/login', '/signup', '/createuser', '/confirmation'];
     const currentPath = paths.indexOf(location.pathname);
     const nextPath = paths.indexOf(to);
 
@@ -83,6 +84,11 @@ export default function App() {
         <Route path='/createuser' element={
           <PageAnimation direction={direction} pageVariants={pageVariants}>
             <CreateUser handleNavigation={handleNavigation} />
+          </PageAnimation>
+        } />
+        <Route path='/confirmation' element={
+          <PageAnimation direction={direction} pageVariants={pageVariants}>
+            <Confirmation handleNavigation={handleNavigation} />
           </PageAnimation>
         } />
         {
